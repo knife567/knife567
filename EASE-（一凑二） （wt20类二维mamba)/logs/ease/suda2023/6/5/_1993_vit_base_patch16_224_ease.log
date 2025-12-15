@@ -1,0 +1,94 @@
+2025-08-24 13:51:55,643 [trainer.py] => config: ./exps/ку╢С2023.json
+2025-08-24 13:51:55,644 [trainer.py] => prefix:  
+2025-08-24 13:51:55,644 [trainer.py] => dataset: suda2023
+2025-08-24 13:51:55,644 [trainer.py] => memory_size: 0
+2025-08-24 13:51:55,644 [trainer.py] => memory_per_class: 0
+2025-08-24 13:51:55,644 [trainer.py] => fixed_memory: False
+2025-08-24 13:51:55,644 [trainer.py] => shuffle: True
+2025-08-24 13:51:55,644 [trainer.py] => init_cls: 6
+2025-08-24 13:51:55,644 [trainer.py] => increment: 5
+2025-08-24 13:51:55,644 [trainer.py] => model_name: ease
+2025-08-24 13:51:55,644 [trainer.py] => backbone_type: vit_base_patch16_224_ease
+2025-08-24 13:51:55,645 [trainer.py] => device: [device(type='cuda', index=0)]
+2025-08-24 13:51:55,645 [trainer.py] => seed: 1993
+2025-08-24 13:51:55,645 [trainer.py] => init_epochs: 100
+2025-08-24 13:51:55,645 [trainer.py] => init_lr: 0.03
+2025-08-24 13:51:55,645 [trainer.py] => later_epochs: 80
+2025-08-24 13:51:55,645 [trainer.py] => later_lr: 0.02
+2025-08-24 13:51:55,645 [trainer.py] => batch_size: 64
+2025-08-24 13:51:55,645 [trainer.py] => weight_decay: 0.0005
+2025-08-24 13:51:55,645 [trainer.py] => min_lr: 0
+2025-08-24 13:51:55,645 [trainer.py] => optimizer: sgd
+2025-08-24 13:51:55,645 [trainer.py] => scheduler: cosine
+2025-08-24 13:51:55,645 [trainer.py] => pretrained: True
+2025-08-24 13:51:55,645 [trainer.py] => vpt_type: Deep
+2025-08-24 13:51:55,645 [trainer.py] => prompt_token_num: 10
+2025-08-24 13:51:55,645 [trainer.py] => ffn_num: 256
+2025-08-24 13:51:55,645 [trainer.py] => use_diagonal: False
+2025-08-24 13:51:55,645 [trainer.py] => recalc_sim: False
+2025-08-24 13:51:55,645 [trainer.py] => alpha: 0.5
+2025-08-24 13:51:55,645 [trainer.py] => use_init_ptm: True
+2025-08-24 13:51:55,645 [trainer.py] => beta: 0.3
+2025-08-24 13:51:55,645 [trainer.py] => use_old_data: False
+2025-08-24 13:51:55,645 [trainer.py] => use_reweight: True
+2025-08-24 13:51:55,645 [trainer.py] => moni_adam: False
+2025-08-24 13:51:55,646 [trainer.py] => adapter_num: -1
+2025-08-24 13:51:55,646 [trainer.py] => data_type: float32
+2025-08-24 13:52:16,144 [data_manager.py] => [18, 15, 23, 2, 8, 12, 10, 6, 14, 24, 13, 20, 22, 11, 5, 0, 19, 4, 21, 9, 7, 16, 3, 25, 17, 1]
+2025-08-24 13:52:18,774 [_builder.py] => Loading pretrained weights from Hugging Face hub (timm/vit_base_patch16_224.augreg2_in21k_ft_in1k)
+2025-08-24 13:52:19,165 [_hub.py] => [timm/vit_base_patch16_224.augreg2_in21k_ft_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2025-08-24 13:52:19,485 [trainer.py] => All params: 90529536
+2025-08-24 13:52:19,487 [trainer.py] => Trainable params: 4730880
+2025-08-24 13:52:19,553 [ease.py] => Learning on 0-6
+2025-08-24 15:03:24,295 [ease.py] => Task 0, Epoch 100/100 => Loss 0.016, Train_accy 100.00
+2025-08-24 15:05:13,247 [ease.py] => Task correct: 94.05646359583953
+2025-08-24 15:05:13,247 [ease.py] => Task acc: 90.04457652303121
+2025-08-24 15:05:13,308 [trainer.py] => No NME accuracy.
+2025-08-24 15:05:13,308 [trainer.py] => CNN: {'total': 87.07, '00-04': 88.77, 'old': 0, 'new': 87.07}
+2025-08-24 15:05:13,308 [trainer.py] => CNN top1 curve: [87.07]
+2025-08-24 15:05:13,308 [trainer.py] => Average Accuracy (CNN): 87.07 
+
+2025-08-24 15:05:13,309 [trainer.py] => All params: 90543362
+2025-08-24 15:05:13,309 [trainer.py] => Trainable params: 4730880
+2025-08-24 15:05:13,311 [ease.py] => Learning on 6-11
+2025-08-24 15:58:49,984 [ease.py] => Task 1, Epoch 80/80 => Loss 0.062, Train_accy 99.70
+2025-08-24 16:01:21,868 [ease.py] => Task correct: 73.86731391585761
+2025-08-24 16:01:21,868 [ease.py] => Task acc: 88.10679611650485
+2025-08-24 16:01:21,937 [trainer.py] => No NME accuracy.
+2025-08-24 16:01:21,938 [trainer.py] => CNN: {'total': 69.01, '00-04': 73.26, '05-09': 61.99, 'old': 70.58, 'new': 67.14}
+2025-08-24 16:01:21,938 [trainer.py] => CNN top1 curve: [87.07, 69.01]
+2025-08-24 16:01:21,938 [trainer.py] => Average Accuracy (CNN): 78.03999999999999 
+
+2025-08-24 16:01:21,940 [trainer.py] => All params: 90558722
+2025-08-24 16:01:21,941 [trainer.py] => Trainable params: 4730880
+2025-08-24 16:01:21,944 [ease.py] => Learning on 11-16
+2025-08-24 16:55:14,627 [ease.py] => Task 2, Epoch 80/80 => Loss 0.064, Train_accy 99.39
+2025-08-24 16:58:22,729 [ease.py] => Task correct: 57.17463848720801
+2025-08-24 16:58:22,730 [ease.py] => Task acc: 88.5428253615128
+2025-08-24 16:58:22,794 [trainer.py] => No NME accuracy.
+2025-08-24 16:58:22,794 [trainer.py] => CNN: {'total': 53.62, '00-04': 57.93, '05-09': 52.04, '10-14': 48.93, 'old': 53.32, 'new': 54.27}
+2025-08-24 16:58:22,794 [trainer.py] => CNN top1 curve: [87.07, 69.01, 53.62]
+2025-08-24 16:58:22,795 [trainer.py] => Average Accuracy (CNN): 69.89999999999999 
+
+2025-08-24 16:58:22,796 [trainer.py] => All params: 90582530
+2025-08-24 16:58:22,797 [trainer.py] => Trainable params: 4730880
+2025-08-24 16:58:22,800 [ease.py] => Learning on 16-21
+2025-08-24 17:52:15,391 [ease.py] => Task 3, Epoch 80/80 => Loss 0.182, Train_accy 97.71
+2025-08-24 17:56:42,994 [ease.py] => Task correct: 48.85690093141405
+2025-08-24 17:56:42,995 [ease.py] => Task acc: 86.79085520745132
+2025-08-24 17:56:43,039 [trainer.py] => No NME accuracy.
+2025-08-24 17:56:43,039 [trainer.py] => CNN: {'total': 46.82, '00-04': 56.33, '05-09': 46.71, '10-14': 45.2, '15-19': 41.92, 'old': 50.17, 'new': 36.17}
+2025-08-24 17:56:43,039 [trainer.py] => CNN top1 curve: [87.07, 69.01, 53.62, 46.82]
+2025-08-24 17:56:43,039 [trainer.py] => Average Accuracy (CNN): 64.13 
+
+2025-08-24 17:56:43,040 [trainer.py] => All params: 90614018
+2025-08-24 17:56:43,041 [trainer.py] => Trainable params: 4730880
+2025-08-24 17:56:43,043 [ease.py] => Learning on 21-26
+2025-08-24 18:50:31,609 [ease.py] => Task 4, Epoch 80/80 => Loss 0.098, Train_accy 99.09
+2025-08-24 18:55:45,448 [ease.py] => Task correct: 43.69230769230769
+2025-08-24 18:55:45,449 [ease.py] => Task acc: 85.84615384615384
+2025-08-24 18:55:45,491 [trainer.py] => No NME accuracy.
+2025-08-24 18:55:45,491 [trainer.py] => CNN: {'total': 41.71, '00-04': 51.34, '05-09': 39.08, '10-14': 36.65, '15-19': 36.77, '20-24': 47.34, 'old': 40.35, 'new': 47.42}
+2025-08-24 18:55:45,491 [trainer.py] => CNN top1 curve: [87.07, 69.01, 53.62, 46.82, 41.71]
+2025-08-24 18:55:45,492 [trainer.py] => Average Accuracy (CNN): 59.645999999999994 
+
