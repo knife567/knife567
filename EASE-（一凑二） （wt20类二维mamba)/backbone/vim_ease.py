@@ -149,7 +149,7 @@ class Adapter(nn.Module):
                  bottleneck=None,
                  dropout=0.0,
                  init_option="lora",
-                 adapter_scalar="1. 0",
+                 adapter_scalar="1.0",
                  adapter_layernorm_option="in"):
         super().__init__()
         self.n_embd = config.d_model if d_model is None else d_model
@@ -339,7 +339,7 @@ class VisionMamba(nn.Module):
         vit_state = None
 
         # 本地文件
-        for path in ["./pretrained/vit_base_patch16_224.pth", "./pretrained/vit. pth"]:
+        for path in ["./pretrained/vit_base_patch16_224.pth", "./pretrained/vit.pth"]:
             if os.path.exists(path):
                 print(f"  From local:  {path}")
                 checkpoint = torch.load(path, map_location='cpu')
@@ -369,7 +369,8 @@ class VisionMamba(nn.Module):
         if 'patch_embed.proj.weight' in state:
             if state['patch_embed.proj.weight'].shape == self.patch_embed.proj.weight.shape:
                 self.patch_embed.proj.weight.data.copy_(state['patch_embed.proj.weight'])
-                self.patch_embed.proj.bias.data.copy_(state['patch_embed.proj.bias'])
+                if 'patch_embed.proj.bias' in state:
+                    self.patch_embed.proj.bias.data.copy_(state['patch_embed.proj.bias'])
                 print("  ✓ patch_embed")
 
         # Positional embedding (interpolated if necessary)
@@ -384,6 +385,8 @@ class VisionMamba(nn.Module):
                 patch_pos = patch_pos.permute(0, 2, 3, 1).reshape(1, new_size * new_size, -1)
                 pos = torch.cat([cls_pos, patch_pos], dim=1)
                 print(f"  ✓ pos_embed (interpolated {orig_size}→{new_size})")
+            else:
+                print("  ✓ pos_embed")
             self.pos_embed.data.copy_(pos)
 
         # CLS token
@@ -392,15 +395,43 @@ class VisionMamba(nn.Module):
             print("  ✓ cls_token")
 
         # Blocks (MLP + LayerNorm)
+        # ViT uses blocks.{i}.mlp.fc1/fc2, Mamba uses blocks.{i}.fc1/fc2
+        loaded_blocks = 0
         for i in range(min(self.depth, 12)):
-            for key in ['fc1', 'fc2', 'norm1', 'norm2']:  # 直接访问 fc1, fc2 等属性
-                src = f'blocks.{i}.{key}'
-                tgt = getattr(self.blocks[i], key)  # 直接访问 blocks[i].fc1 或 blocks[i].norm1
-
+            block_loaded = False
+            
+            # Load MLP weights (map from ViT's mlp.fc1/fc2 to Mamba's fc1/fc2)
+            for mamba_key, vit_key in [('fc1', 'mlp.fc1'), ('fc2', 'mlp.fc2')]:
+                src = f'blocks.{i}.{vit_key}'
                 if f'{src}.weight' in state:
+                    tgt = getattr(self.blocks[i], mamba_key)
                     tgt.weight.data.copy_(state[f'{src}.weight'])
-                    tgt.bias.data.copy_(state[f'{src}.bias'])
-        print(f"  ✓ {min(self.depth, 12)} blocks (MLP + LayerNorm)")
+                    if f'{src}.bias' in state:
+                        tgt.bias.data.copy_(state[f'{src}.bias'])
+                    block_loaded = True
+            
+            # Load LayerNorm weights (norm1, norm2)
+            for key in ['norm1', 'norm2']:
+                src = f'blocks.{i}.{key}'
+                if f'{src}.weight' in state:
+                    tgt = getattr(self.blocks[i], key)
+                    tgt.weight.data.copy_(state[f'{src}.weight'])
+                    if f'{src}.bias' in state:
+                        tgt.bias.data.copy_(state[f'{src}.bias'])
+                    block_loaded = True
+            
+            if block_loaded:
+                loaded_blocks += 1
+        
+        if loaded_blocks > 0:
+            print(f"  ✓ {loaded_blocks} blocks (MLP + LayerNorm)")
+        
+        # Final norm
+        if 'norm.weight' in state:
+            self.norm.weight.data.copy_(state['norm.weight'])
+            if 'norm.bias' in state:
+                self.norm.bias.data.copy_(state['norm.bias'])
+            print("  ✓ final norm")
 
     def freeze_pretrained_layers(self):
         for p in self.patch_embed.parameters():
