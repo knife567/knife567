@@ -22,35 +22,74 @@ def get_backbone(args, pretrained=False):
     if '_ease' in name:
         ffn_num = args["ffn_num"]
         if args["model_name"] == "ease":
-            from backbone import vit_ease
             from easydict import EasyDict
-            tuning_config = EasyDict(
-                # AdaptFormer
-                ffn_adapt=True,
-                ffn_option="parallel",
-                ffn_adapter_layernorm_option="none",
-                ffn_adapter_init_option="lora",
-                ffn_adapter_scalar="0.1",
-                ffn_num=ffn_num,
-                d_model=768,
-                # VPT related
-                vpt_on=False,
-                vpt_num=0,
-                _device=args["device"][0]
-            )
-            if name == "vit_base_patch16_224_ease":
-                model = vit_ease.vit_base_patch16_224_ease(num_classes=0,
-                                                           global_pool=False, drop_path_rate=0.0,
+            
+            # 检查是否为StarNet backbone
+            if 'starnet' in name:
+                from backbone import starnet_ease
+                tuning_config = EasyDict(
+                    # AdaptFormer
+                    ffn_adapt=True,
+                    ffn_option="parallel",
+                    ffn_adapter_layernorm_option="none",
+                    ffn_adapter_init_option="lora",
+                    ffn_adapter_scalar="0.1",
+                    ffn_num=ffn_num,
+                    d_model=256,  # StarNet的默认维度
+                    attn_bn=ffn_num,
+                    # VPT related
+                    vpt_on=False,
+                    vpt_num=0,
+                    _device=args["device"][0]
+                )
+                if name == "starnet_s1_ease":
+                    model = starnet_ease.starnet_s1_ease(num_classes=0,
+                                                         drop_path_rate=0.0,
+                                                         tuning_config=tuning_config)
+                    model.out_dim = 256
+                elif name == "starnet_s2_ease":
+                    model = starnet_ease.starnet_s2_ease(num_classes=0,
+                                                         drop_path_rate=0.0,
+                                                         tuning_config=tuning_config)
+                    model.out_dim = 512
+                elif name == "starnet_base_ease":
+                    model = starnet_ease.starnet_base_ease(num_classes=0,
+                                                           drop_path_rate=0.0,
                                                            tuning_config=tuning_config)
-                model.out_dim = 768
-            elif name == "vit_base_patch16_224_in21k_ease":
-                model = vit_ease.vit_base_patch16_224_in21k_ease(num_classes=0,
-                                                                 global_pool=False, drop_path_rate=0.0,
-                                                                 tuning_config=tuning_config)
-                model.out_dim = 768
+                    model.out_dim = 768
+                else:
+                    raise NotImplementedError("Unknown StarNet type {}".format(name))
+                return model.eval()
             else:
-                raise NotImplementedError("Unknown type {}".format(name))
-            return model.eval()
+                # ViT backbone
+                from backbone import vit_ease
+                tuning_config = EasyDict(
+                    # AdaptFormer
+                    ffn_adapt=True,
+                    ffn_option="parallel",
+                    ffn_adapter_layernorm_option="none",
+                    ffn_adapter_init_option="lora",
+                    ffn_adapter_scalar="0.1",
+                    ffn_num=ffn_num,
+                    d_model=768,
+                    # VPT related
+                    vpt_on=False,
+                    vpt_num=0,
+                    _device=args["device"][0]
+                )
+                if name == "vit_base_patch16_224_ease":
+                    model = vit_ease.vit_base_patch16_224_ease(num_classes=0,
+                                                               global_pool=False, drop_path_rate=0.0,
+                                                               tuning_config=tuning_config)
+                    model.out_dim = 768
+                elif name == "vit_base_patch16_224_in21k_ease":
+                    model = vit_ease.vit_base_patch16_224_in21k_ease(num_classes=0,
+                                                                     global_pool=False, drop_path_rate=0.0,
+                                                                     tuning_config=tuning_config)
+                    model.out_dim = 768
+                else:
+                    raise NotImplementedError("Unknown type {}".format(name))
+                return model.eval()
         else:
             raise NotImplementedError("Inconsistent model name and model type")
     else:
