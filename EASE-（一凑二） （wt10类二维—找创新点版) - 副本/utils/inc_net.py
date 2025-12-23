@@ -23,6 +23,7 @@ def get_backbone(args, pretrained=False):
         ffn_num = args["ffn_num"]
         if args["model_name"] == "ease":
             from backbone import vit_ease
+            from backbone import starnet_ease
             from easydict import EasyDict
             tuning_config = EasyDict(
                 # AdaptFormer
@@ -48,6 +49,18 @@ def get_backbone(args, pretrained=False):
                                                                  global_pool=False, drop_path_rate=0.0,
                                                                  tuning_config=tuning_config)
                 model.out_dim = 768
+            elif name == "starnet_s1_ease":
+                model = starnet_ease.starnet_s1_ease(num_classes=0, tuning_config=tuning_config)
+                model.out_dim = model.num_features
+            elif name == "starnet_s2_ease":
+                model = starnet_ease.starnet_s2_ease(num_classes=0, tuning_config=tuning_config)
+                model.out_dim = model.num_features
+            elif name == "starnet_s3_ease":
+                model = starnet_ease.starnet_s3_ease(num_classes=0, tuning_config=tuning_config)
+                model.out_dim = model.num_features
+            elif name == "starnet_s4_ease":
+                model = starnet_ease.starnet_s4_ease(num_classes=0, tuning_config=tuning_config)
+                model.out_dim = model.num_features
             else:
                 raise NotImplementedError("Unknown type {}".format(name))
             return model.eval()
